@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Philippine Superbike Championship (PSBK)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        psbkRed: '#E30613',
+                        psbkBlue: '#0038A8',
+                        psbkYellow: '#FCD116',
+                        psbkDark: '#1a202c'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .hero-bg {
+            background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('https://images.topgear.com.ph/topgear/images/2018/10/11/arrc-main-1539252433.jpg');
+            background-size: cover;
+            background-position: center;
+        }
+        .race-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .race-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        }
+        .rider-hover:hover .rider-info {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .loading {
+            display: none;
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+    <!-- Navigation -->
+    <nav class="bg-psbkDark text-white sticky top-0 z-50 shadow-lg">
+        <div class="container mx-auto px-4">
+            <div class="flex justify-between items-center py-4">
+                <div class="flex items-center">
+                    <img src="https://scontent.fmnl9-3.fna.fbcdn.net/v/t39.30808-6/279551370_448098680456376_283013761657902383_n.jpg?_nc_cat=100&ccb=1-7&_nc_sid=6ee11a&_nc_eui2=AeGF4mIJWdQSd-rYSoEsUkq9iNFee1mjMIGI0V57WaMwgXiNKledgqkphu7BT4hYLIOqSZGDoR4oTDa5O5qsXhac&_nc_ohc=ExU6NJ700bQQ7kNvwE0o9bu&_nc_oc=AdmEu0dF37cUDVoPZAOry3_Mjc5O7kHDU0DlzVm1NqG4Okq4DVG01OXonqxFsSm_sRw&_nc_zt=23&_nc_ht=scontent.fmnl9-3.fna&_nc_gid=qndXwdMS5hRT0I-DkXeHrg&oh=00_AfVUSG1ib1zGtJwwqm0z-8a8D65C9xIhrEbhkfeQ_rgmfw&oe=68B1EBCB" alt="Philippine Superbike Championship official logo with racing motorcycle and Philippine flag colors" class="h-12 w-12 mr-3">
+                    <span class="text-2xl font-bold text-psbkRed">PSBK</span>
+                </div>
+                
+                <div class="hidden md:flex space-x-8">
+                    <a href="#calendar" class="hover:text-psbkRed transition-colors">Calendar & Results</a>
+                    <a href="#standings" class="hover:text-psbkRed transition-colors">Standings</a>
+                    <a href="#riders" class="hover:text-psbkRed transition-colors">Riders & Teams</a>
+                    <a href="#videos" class="hover:text-psbkRed transition-colors">Videos</a>
+                    <a href="#news" class="hover:text-psbkRed transition-colors">News</a>
+                </div>
+                
+                <div class="md:hidden">
+                    <button id="mobile-menu-btn" class="text-white" aria-label="Open mobile menu">
+                        <i class="fas fa-bars text-2xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Mobile Menu -->
+    <div id="mobile-menu" class="hidden bg-psbkDark text-white p-4">
+        <div class="flex flex-col space-y-4">
+            <a href="#calendar" class="hover:text-psbkRed">Calendar & Results</a>
+            <a href="#standings" class="hover:text-psbkRed">Standings</a>
+            <a href="#riders" class="hover:text-psbkRed">Riders & Teams</a>
+            <a href="#videos" class="hover:text-psbkRed">Videos</a>
+            <a href="#news" class="hover:text-psbkRed">News</a>
+        </div>
+    </div>
+
+    <!-- Hero Section -->
+    <section class="hero-bg text-white py-20">
+        <div class="container mx-auto px-4 text-center">
+            <h1 class="text-5xl md:text-6xl font-bold mb-6">Philippine Superbike Championship</h1>
+            <p class="text-xl md:text-2xl mb-8">The Premier Motorcycle Racing Series in the Philippines</p>
+            <div class="flex flex-wrap justify-center gap-4">
+                <button onclick="navigateToSubdirectory('results')" class="bg-psbkRed hover:bg-red-700 px-8 py-3 rounded-lg font-semibold transition-colors">
+                    View Latest Results
+                </button>
+                <button onclick="navigateToSubdirectory('videos')" class="border-2 border-white hover:bg-white hover:text-psbkDark px-8 py-3 rounded-lg font-semibold transition-colors">
+                    Watch Highlights
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Racing Series Navigation -->
+    <section class="bg-white py-12">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl font-bold text-center mb-8 text-psbkDark">Championship Classes</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Underbone Class -->
+                <div class="race-card bg-gradient-to-br from-gray-100 to-gray-200 rounded-lg p-6 text-center">
+                    <img src="https://scontent.fmnl4-6.fna.fbcdn.net/v/t39.30808-6/528967876_1103605415165436_7351361182451897938_n.jpg?_nc_cat=107&ccb=1-7&_nc_sid=127cfc&_nc_eui2=AeFkqeq83nrI41ZydN7cpxCeXsxujeSPYRdezG6N5I9hF9Su9u9nTOgYCtSLeMbiK58aYsDBYppId29INzq9tKgi&_nc_ohc=HB_9_JCYoFsQ7kNvwGb8mxG&_nc_oc=AdlS6d-cDrCka1noGxgMC6LQNFSsOJx4tp2W-wmrOQrTQ_SjZ0Yy8yNTM-IloWuJIE2zJeivFRXdYR4H0qc0i7F0&_nc_zt=23&_nc_ht=scontent.fmnl4-6.fna&_nc_gid=fdAfIKcYT4d3T9pv2xrOrA&oh=00_AfVXhzRAsTdCkbDHvxZQlIPOznEGuR4rTDdtpuvGCwGuGQ&oe=68B1E8DA" alt="Under Bone motorcycle racing category featuring lightweight bikes with riders in aggressive racing position" class="w-full h-48 object-cover rounded-lg mb-4" loading="lazy">
+                    <h3 class="text-2xl font-bold text-psbkDark mb-2">Underbone Championship</h3>
+                    <p class="text-gray-600 mb-4">Lightweight category featuring 110cc-150cc underbone motorcycles, perfect for developing racing skills.</p>
+                    <button onclick="navigateToSubdirectory('underbone')" class="bg-psbkBlue hover:bg-blue-800 text-white px-6 py-2 rounded-lg transition-colors">
+                        View Class
+                    </button>
+                </div>
+
+                <!-- Scooter Class -->
+                <div class="race-card bg-gradient-to-br from-gray-100 to-gray-200 rounded-lg p-6 text-center">
+                    <img src="https://scontent.fmnl4-4.fna.fbcdn.net/v/t39.30808-6/512317247_1245410570930897_570319749808063701_n.jpg?_nc_cat=102&ccb=1-7&_nc_sid=f727a1&_nc_eui2=AeF0KNYKk29-h8m7taXIG0hruP-Ut3Mc86m4_5S3cxzzqbCHJd4S53dVln14-OjY3SBYT5SzfyX2_X6PCO2ZCvKc&_nc_ohc=1JQUWIgO2FoQ7kNvwEv8jvo&_nc_oc=AdmVrGK9HJrPnFojJFz7ZGjxkyOXoJ01E7ciWwzVwJTBDCEyudvF2EC0UhWtk-mBmfnI7axuE9SMVRIOR4OfTyiS&_nc_zt=23&_nc_ht=scontent.fmnl4-4.fna&_nc_gid=athGlAG0ZzKSuPfHheX2kw&oh=00_AfXecKwlAJ9edKfB2hZqzlLSx1AE6ECOxqda22ZOJozWFQ&oe=68B1FB4F" alt="Scooter racing class with automatic transmission bikes and riders in colorful racing gear" class="w-full h-48 object-cover rounded-lg mb-4" loading="lazy">
+                    <h3 class="text-2xl font-bold text-psbkDark mb-2">Scooter Championship</h3>
+                    <p class="text-gray-600 mb-4">Automatic transmission class showcasing skilled riding on 125cc-180cc scooters in competitive racing.</p>
+                    <button onclick="navigateToSubdirectory('scooter')" class="bg-psbkRed hover:bg-red-800 text-white px-6 py-2 rounded-lg transition-colors">
+                        View Class
+                    </button>
+                </div>
+
+                <!-- Superbike Class -->
+                <div class="race-card bg-gradient-to-br from-gray-100 to-gray-200 rounded-lg p-6 text-center">
+                    <img src="https://scontent.fmnl4-6.fna.fbcdn.net/v/t39.30808-6/518002064_1263676792437608_1024596289608522405_n.jpg?_nc_cat=111&ccb=1-7&_nc_sid=f727a1&_nc_eui2=AeGBNzlQ09EEdyHg8lTtiJQDwdXS_3XOEZ_B1dL_dc4Rn3ZPSqZ3P3U_qgGW1xizK_ClgKBThT3fWvxGysdyaeSj&_nc_ohc=qem9O1-77OgQ7kNvwFO_NAa&_nc_oc=AdkBVG3QacarkwO3YUDvuPzagY0Afeekv409Kq59ah-CpphyqXapX0l-K4NKZbICQcEU8oEE7Viqh--gdps9mGul&_nc_zt=23&_nc_ht=scontent.fmnl4-6.fna&_nc_gid=8nQNHy3Xb0OrVKbNUDpPkg&oh=00_AfUR_QTq7IghBDs-tW9Kvta0PUDpTJ184gehzs0vclnylQ&oe=68B1F2D3" alt="Superbike category featuring high-performance 600cc-1000cc motorcycles with professional riders at speed" class="w-full h-48 object-cover rounded-lg mb-4" loading="lazy">
+                    <h3 class="text-2xl font-bold text-psbkDark mb-2">Superbike Championship</h3>
+                    <p class="text-gray-600 mb-4">Premier class with high-performance 600cc-1000cc motorcycles, featuring top professional riders.</p>
+                    <button onclick="navigateToSubdirectory('superbike')" class="bg-psbkYellow hover:bg-yellow-600 text-psbkDark px-6 py-2 rounded-lg transition-colors">
+                        View Class
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Calendar & Results Section -->
+    <section id="calendar" class="bg-gray-100 py-16">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl font-bold text-center mb-8 text-psbkDark" id="calendar-title">2024 Calendar & Results</h2>
+            
+            <div class="mb-8 flex justify-center">
+                <select id="year-select" class="px-4 py-2 rounded-lg border border-gray-300" onchange="loadYearData(this.value)">
+                    <option value="2024">2024 Season</option>
+                    <option value="2023">2023 Season</option>
+                    <option value="2022">2022 Season</option>
+                    <option value="2021">2021 Season</option>
+                </select>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="calendar-events">
+                <!-- Calendar events will be loaded dynamically -->
+                <div class="bg-white rounded-lg shadow-md p-6 race-card">
+                    <div class="flex justify-between items-start mb-4">
+                        <span class="bg-psbkRed text-white px-3 py-1 rounded-full text-sm">Round 1</span>
+                        <span class="text-gray-500">Mar 15-17, 2024</span>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">Clark International Speedway</h3>
+                    <p class="text-gray-600 mb-4">Pampanga, Philippines</p>
+                    <div class="flex justify-between items-center">
+                        <span class="text-psbkBlue font-semibold">Completed</span>
+                        <button onclick="navigateToSubdirectory('results/2024/round1')" class="text-psbkRed hover:underline">View Results</button>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-md p-6 race-card">
+                    <div class="flex justify-between items-start mb-4">
+                        <span class="bg-psbkBlue text-white px-3 py-1 rounded-full text-sm">Round 2</span>
+                        <span class="text-gray-500">May 10-12, 2024</span>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">Batangas Racing Circuit</h3>
+                    <p class="text-gray-600 mb-4">Batangas, Philippines</p>
+                    <div class="flex justify-between items-center">
+                        <span class="text-psbkBlue font-semibold">Completed</span>
+                        <button onclick="navigateToSubdirectory('results/2024/round2')" class="text-psbkRed hover:underline">View Results</button>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-md p-6 race-card">
+                    <div class="flex justify-between items-start mb-4">
+                        <span class="bg-psbkYellow text-psbkDark px-3 py-1 rounded-full text-sm">Round 3</span>
+                        <span class="text-gray-500">Jul 19-21, 2024</span>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">Carmona Race Track</h3>
+                    <p class="text-gray-600 mb-4">Cavite, Philippines</p>
+                    <div class="flex justify-between items-center">
+                        <span class="text-green-600 font-semibold">Upcoming</span>
+                        <button onclick="navigateToSubdirectory('calendar/2024/round3')" class="text-psbkRed hover:underline">View Schedule</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Standings Section -->
+    <section id="standings" class="bg-white py-16">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl font-bold text-center mb-8 text-psbkDark">Championship Standings</h2>
+            
+            <div class="mb-8 flex space-x-4 justify-center">
+                <button onclick="filterStandings('superbike')" class="bg-psbkRed text-white px-6 py-2 rounded-lg" id="superbike-btn">Superbike</button>
+                <button onclick="filterStandings('scooter')" class="bg-gray-200 hover:bg-gray-300 px-6 py-2 rounded-lg" id="scooter-btn">Scooter</button>
+                <button onclick="filterStandings('underbone')" class="bg-gray-200 hover:bg-gray-300 px-6 py-2 rounded-lg" id="underbone-btn">Under Bone</button>
+            </div>
+
+            <div class="overflow-x-auto" id="standings-table">
+                <table class="w-full border-collapse">
+                    <thead>
+                        <tr class="bg-psbkDark text-white">
+                            <th class="px-6 py-3 text-left">Pos</th>
+                            <th class="px-6 py-3 text-left">Rider</th>
+                            <th class="px-6 py-3 text-left">Team</th>
+                            <th class="px-6 py-3 text-center">Points</th>
+                            <th class="px-6 py-3 text-center">Wins</th>
+                        </tr>
+                    </thead>
+                    <tbody id="standings-body">
+                        <!-- Standings will be loaded dynamically -->
+                        <tr class="border-b hover:bg-gray-50">
+                            <td class="px-6 py-4 font-bold">1</td>
+                            <td class="px-6 py-4">Miguel Santos</td>
+                            <td class="px-6 py-4">Yamaha Racing Philippines</td>
+                            <td class="px-6 py-4 text-center font-bold">95</td>
+                            <td class="px-6 py-4 text-center">2</td>
+                        </tr>
+                        <tr class="border-b hover:bg-gray-50">
+                            <td class="px-6 py-4 font-bold">2</td>
+                            <td class="px-6 py-4">Juan Dela Cruz</td>
+                            <td class="px-6 py-4">Honda Team Asia</td>
+                            <td class="px-6 py-4 text-center font-bold">78</td>
+                            <td class="px-6 py-4 text-center">1</td>
+                        </tr>
+                        <tr class="border-b hover:bg-gray-50">
+                            <td class="px-6 py-4 font-bold">3</td>
+                            <td class="px-6 py-4">Carlos Reyes</td>
+                            <td class="px-6 py-4">Suzuki Endurance</td>
+                            <td class="px-6 py-4 text-center font-bold">65</td>
+                            <td class="px-6 py-4 text-center">0</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <!-- Riders & Teams Section -->
+    <section id="riders" class="bg-gray-100 py-16">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl font-bold text-center mb-12 text-psbkDark">Featured Riders & Teams</h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- Rider Cards -->
+                <div class="rider-hover bg-white rounded-lg overflow-hidden shadow-md relative">
+                    <img src="https://scontent.fmnl4-6.fna.fbcdn.net/v/t51.75761-15/495670095_18505598431033134_5915107245948906557_n.jpg?_nc_cat=107&ccb=1-7&_nc_sid=127cfc&_nc_eui2=AeG0GJrtDelRCyaoN7bXubvxxt_z5R2eYuzG3_PlHZ5i7AA7ODTwhrPV3_eWC-vO4WE2WJ-8UaRujqy6yoNu10-A&_nc_ohc=6w9G3Mg-NIYQ7kNvwH70Yc4&_nc_oc=AdkKE0dSW5BmGv0-rgZKibRawkhyjWCCdnGW4E-FcLJr1IgMvMLyUf5TWe5saxGypGV8zxAHY13ILuj0tsgNysV1&_nc_zt=23&_nc_ht=scontent.fmnl4-6.fna&_nc_gid=nkJ-myuCm8xUjiwV02mLBw&oh=00_AfVkd2kmFZ7jJU5pq0HGobJHAeftYNIn4D_y26ACy1S5MA&oe=68B1CDC1" alt="Professional motorcycle rider Miguel Santos in racing leathers holding helmet with determined expression" class="w-full h-64 object-cover" loading="lazy">
+                    <div class="rider-info absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black to-transparent p-4 opacity-0 transform translate-y-4 transition-all">
+                        <h3 class="text-white font-bold text-lg">TJ Alberto</h3>
+                        <p class="text-psbkRed">#1 - Yamaha Racing</p>
+                    </div>
+                    <div class="p-4">
+                        <h3 class="font-bold text-lg">TJ Alberto</h3>
+                        <p class="text-psbkRed">Superbike Class Leader</p>
+                    </div>
+                </div>
+
+                <div class="rider-hover bg-white rounded-lg overflow-hidden shadow-md relative">
+                    <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/a7b4ff5e-d0cc-4f19-8a07-2d4f47fb8e1a.png" alt="Scooter class rider Maria Rodriguez smiling in racing gear with her customized scooter" class="w-full h-64 object-cover" loading="lazy">
+                    <div class="rider-info absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black to-transparent p-4 opacity-0 transform translate-y-4 transition-all">
+                        <h3 class="text-white font-bold text-lg">Maria Rodriguez</h3>
+                        <p class="text-psbkRed">#27 - Honda Scooter Team</p>
+                    </div>
+                    <div class="p-4">
+                        <h3 class="font-bold text-lg">Maria Rodriguez</h3>
+                        <p class="text-psbkRed">Scooter Class Champion</p>
+                    </div>
+                </div>
+
+                <div class="rider-hover bg-white rounded-lg overflow-hidden shadow-md relative">
+                    <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/bd8304f8-4ec1-421b-aba3-e84d020ebaf9.png" alt="Young underbone rider James Tan performing wheelie during practice session" class="w-full h-64 object-cover" loading="lazy">
+                    <div class="rider-info absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black to-transparent p-4 opacity-0 transform translate-y-4 transition-all">
+                        <h3 class="text-white font-bold text-lg">James Tan</h3>
+                        <p class="text-psbkRed">#88 - Underbone Pro</p>
+                    </div>
+                    <div class="p-4">
+                        <h3 class="font-bold text-lg">James Tan</h3>
+                        <p class="text-psbkRed">Under Bone Rising Star</p>
+                    </div>
+                </div>
+
+                <div class="rider-hover bg-white rounded-lg overflow-hidden shadow-md relative">
+                    <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/47b6f6ec-9ac2-4c79-8935-481f37ad57f6.png" alt="Veteran rider Roberto Garcia with team members in pit garage discussing strategy" class="w-full h-64 object-cover" loading="lazy">
+                    <div class="rider-info absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black to-transparent p-4 opacity-0 transform translate-y-4 transition-all">
+                        <h3 class="text-white font-bold text-lg">Roberto Garcia</h3>
+                        <p class="text-psbkRed">#33 - Suzuki Endurance</p>
+                    </div>
+                    <div class="p-4">
+                        <h3 class="font-bold text-lg">Roberto Garcia</h3>
+                        <p class="text-psbkRed">Team Captain</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Videos Section -->
+    <section id="videos" class="bg-white py-16">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl font-bold text-center mb-12 text-psbkDark">Latest Videos</h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div>
+                    <div class="bg-gray-200 rounded-lg overflow-hidden aspect-video mb-4">
+                        <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/f0497aeb-3bc7-404b-8ec1-33f2d5b3457b.png" alt="Video thumbnail of intense motorcycle racing action at Clark International Speedway with multiple bikes battling for position" class="w-full h-full object-cover" loading="lazy">
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">Round 2 Highlights - Batangas Racing Circuit</h3>
+                    <p class="text-gray-600">Watch the intense battles and dramatic finishes from the second round of the 2024 season.</p>
+                </div>
+                
+                <div>
+                    <div class="bg-gray-200 rounded-lg overflow-hidden aspect-video mb-4">
+                        <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/67ab56c5-c6ad-44ae-9151-210b1e8e3986.png" alt="Behind the scenes video thumbnail showing team preparations and rider interviews in pit lane" class="w-full h-full object-cover" loading="lazy">
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">Behind the Scenes: Team Preparations</h3>
+                    <p class="text-gray-600">Exclusive look at how teams prepare for race weekend, from bike setup to strategy meetings.</p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
+                <div class="bg-gray-100 rounded-lg p-4">
+                    <div class="bg-gray-200 rounded-lg overflow-hidden aspect-video mb-3">
+                        <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/0232a8f1-c7cd-4ef2-a149-10f686938021.png" alt="Rider interview with championship leader Miguel Santos discussing his race strategy" class="w-full h-full object-cover" loading="lazy">
+                    </div>
+                    <h4 class="font-bold">Rider Interview: Miguel Santos</h4>
+                </div>
+                <div class="bg-gray-100 rounded-lg p-4">
+                    <div class="bg-gray-200 rounded-lg overflow-hidden aspect-video mb-3">
+                        <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/2d11ed45-a72f-40c3-b5d6-0524ccce8281.png" alt="Onboard camera footage from superbike showing high-speed cornering at race track" class="w-full h-full object-cover" loading="lazy">
+                    </div>
+                    <h4 class="font-bold">Onboard Camera: Superbike Lap</h4>
+                </div>
+                <div class="bg-gray-100 rounded-lg p-4">
+                    <div class="bg-gray-200 rounded-lg overflow-hidden aspect-video mb-3">
+                        <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/42d7bb4a-aca2-46d7-a430-6dcb18f1a04a.png" alt="Crash compilation showing dramatic moments and safety procedures during races" class="w-full h-full object-cover" loading="lazy">
+                    </div>
+                    <h4 class="font-bold">Safety Moments: Crash Compilation</h4>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- News Section -->
+    <section id="news" class="bg-gray-100 py-16">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl font-bold text-center mb-12 text-psbkDark">Latest News</h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <article class="bg-white rounded-lg overflow-hidden shadow-md">
+                    <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/3fde59af-6239-4795-9b02-108d083e91f5.png" alt="News image of championship celebration with trophy presentation and confetti at race track" class="w-full h-48 object-cover" loading="lazy">
+                    <div class="p-6">
+                        <span class="text-psbkRed text-sm font-semibold">Race Report</span>
+                        <h3 class="text-xl font-bold my-2">Santos Dominates Round 2 at Batangas</h3>
+                        <p class="text-gray-600 mb-4">Miguel Santos extends championship lead with commanding victory in perfect racing conditions.</p>
+                        <a href="#" class="text-psbkBlue hover:underline font-semibold">Read More</a>
+                    </div>
+                </article>
+
+                <article class="bg-white rounded-lg overflow-hidden shadow-md">
+                    <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/e20f4845-2f1d-415d-8569-692b80343604.png" alt="Technical inspection of racing motorcycles by officials in garage area" class="w-full h-48 object-cover" loading="lazy">
+                    <div class="p-6">
+                        <span class="text-psbkRed text-sm font-semibold">Technical</span>
+                        <h3 class="text-xl font-bold my-2">New Safety Regulations for 2024 Season</h3>
+                        <p class="text-gray-600 mb-4">PSBK implements enhanced safety protocols and technical regulations for all racing classes.</p>
+                        <a href="#" class="text-psbkBlue hover:underline font-semibold">Read More</a>
+                    </div>
+                </article>
+
+                <article class="bg-white rounded-lg overflow-hidden shadow-md">
+                    <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/ca88d74b-9491-48f6-a7d6-d0d7585de004.png" alt="Young riders participating in racing academy training session with coaches" class="w-full h-48 object-cover" loading="lazy">
+                    <div class="p-6">
+                        <span class="text-psbkRed text-sm font-semibold">Development</span>
+                        <h3 class="text-xl font-bold my-2">PSBK Launches Junior Racing Academy</h3>
+                        <p class="text-gray-600 mb-4">New program aims to develop young Filipino racing talent through comprehensive training.</p>
+                        <a href="#" class="text-psbkBlue hover:underline font-semibold">Read More</a>
+                    </div>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-psbkDark text-white py-12">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div>
+                    <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/0e4925e2-759b-4a70-945e-f273ce4bc680.png" alt="Philippine Superbike Championship official logo with Philippine flag colors" class="mb-4" loading="lazy">
+                    <p class="text-gray-400">The premier motorcycle racing championship in the Philippines, featuring the best riders and teams.</p>
+                </div>
+                
+                <div>
+                    <h4 class="font-bold mb-4 text-psbkRed">Championship</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-white">Superbike Class</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white">Scooter Class</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white">Under Bone Class</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white">Regulations</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="font-bold mb-4 text-psbkRed">Information</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-white">Calendar</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white">Results</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white">Standings</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white">Tickets</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="font-bold mb-4 text-psbkRed">Connect</h4>
+                    <div class="flex space-x-4 mb-4">
+                        <a href="#" class="text-gray-400 hover:text-white"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-white"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-white"><i class="fab fa-youtube"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-white"><i class="fab fa-twitter"></i></a>
+                    </div>
+                    <p class="text-gray-400">Contact: info@psbk.ph</p>
+                    <p class="text-gray-400">+63 912 345 6789</p>
+                </div>
+            </div>
+            
+            <div class="border-t border-gray-700 mt-8 pt-8 text-center text-gray-400">
+                <p>© 2024 Philippine Superbike Championship. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile menu toggle
+        document.getElementById('mobile-menu-btn').addEventListener('click', function() {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+        });
+
+        // Navigate to subdirectory function
+        function navigateToSubdirectory(path) {
+            console.log(`Navigating to: /${path}`);
+            window.location.hash = path;
+            alert(`Navigating to ${path} subdirectory (simulated)`);
+        }
+
+        // Year selector functionality
+        function loadYearData(year) {
+            console.log(`Loading data for year: ${year}`);
+            document.getElementById('calendar-title').textContent = `${year} Calendar & Results`;
+            
+            // Simulate loading data for different years
+            const loadingIndicator = document.createElement('div');
+            loadingIndicator.className = 'text-center py-4';
+            loadingIndicator.innerHTML = '<div class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-psbkRed"></div>';
+            
+            const calendarEvents = document.getElementById('calendar-events');
+            calendarEvents.innerHTML = '';
+            calendarEvents.appendChild(loadingIndicator);
+            
+            setTimeout(() => {
+                // Simulated data loading
+                const events = generateYearEvents(year);
+                calendarEvents.innerHTML = '';
+                events.forEach(event => {
+                    calendarEvents.appendChild(event);
+                });
+            }, 1000);
+        }
+
+        function generateYearEvents(year) {
+            const events = [];
+            const rounds = [
+                { round: 1, date: `Mar 15-17, ${year}`, track: "Clark International Speedway", location: "Pampanga, Philippines", status: "Completed" },
+                { round: 2, date: `May 10-12, ${year}`, track: "Batangas Racing Circuit", location: "Batangas, Philippines", status: "Completed" },
+                { round: 3, date: `Jul 19-21, ${year}`, track: "Carmona Race Track", location: "Cavite, Philippines", status: year === "2024" ? "Upcoming" : "Completed" }
+            ];
+
+            rounds.forEach(race => {
+                const eventDiv = document.createElement('div');
+                eventDiv.className = 'bg-white rounded-lg shadow-md p-6 race-card';
+                
+                const colors = ['psbkRed', 'psbkBlue', 'psbkYellow'];
+                const colorClass = `bg-${colors[race.round - 1]} ${race.round === 3 ? 'text-psbkDark' : 'text-white'}`;
+                
+                eventDiv.innerHTML = `
+                    <div class="flex justify-between items-start mb-4">
+                        <span class="${colorClass} px-3 py-1 rounded-full text-sm">Round ${race.round}</span>
+                        <span class="text-gray-500">${race.date}</span>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">${race.track}</h3>
+                    <p class="text-gray-600 mb-4">${race.location}</p>
+                    <div class="flex justify-between items-center">
+                        <span class="${race.status === 'Completed' ? 'text-psbkBlue' : 'text-green-600'} font-semibold">${race.status}</span>
+                        <button onclick="navigateToSubdirectory('${race.status === 'Completed' ? 'results' : 'calendar'}/${year}/round${race.round}')" class="text-psbkRed hover:underline">
+                            ${race.status === 'Completed' ? 'View Results' : 'View Schedule'}
+                        </button>
+                    </div>
+                `;
+                
+                events.push(eventDiv);
+            });
+
+            return events;
+        }
+
+        // Standings filter functionality
+        function filterStandings(category) {
+            // Update button styles
+            document.getElementById('superbike-btn').className = 'bg-gray-200 hover:bg-gray-300 px-6 py-2 rounded-lg';
+            document.getElementById('scooter-btn').className = 'bg-gray-200 hover:bg-gray-300 px-6 py-2 rounded-lg';
+            document.getElementById('underbone-btn').className = 'bg-gray-200 hover:bg-gray-300 px-6 py-2 rounded-lg';
+            
+            document.getElementById(`${category}-btn`).className = 'bg-psbkRed text-white px-6 py-2 rounded-lg';
+            
+            // Simulate loading standings data for the selected category
+            const standingsBody = document.getElementById('standings-body');
+            standingsBody.innerHTML = '<tr><td colspan="5" class="text-center py-8"><div class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-psbkRed"></div></td></tr>';
+            
+            setTimeout(() => {
+                const standingsData = {
+                    superbike: [
+                        { pos: 1, rider: "John Doe", team: "Yamaha Racing Philippines", points: 95, wins: 2 },
+                        { pos: 2, rider: "John Doe II", team: "Honda Team Asia", points: 78, wins: 1 },
+                        { pos: 3, rider: "John Doe III", team: "Suzuki Endurance", points: 65, wins: 0 }
+                    ],
+                    scooter: [
+                        { pos: 1, rider: "John Scooter", team: "Honda Scooter Team", points: 88, wins: 3 },
+                        { pos: 2, rider: "John Scooter II", team: "Yamaha Scooter Racing", points: 72, wins: 1 },
+                        { pos: 3, rider: "Jane Scooter", team: "Suzuki Automatic", points: 60, wins: 1 }
+                    ],
+                    underbone: [
+                        { pos: 1, rider: "John Underbone", team: "Underbone Pro Racing", points: 92, wins: 2 },
+                        { pos: 2, rider: "Jane Underbone", team: "Honda Underbone Team", points: 80, wins: 2 },
+                        { pos: 3, rider: "John UB", team: "Yamaha Lightweight", points: 68, wins: 1 }
+                    ]
+                };
+                
+                standingsBody.innerHTML = '';
+                standingsData[category].forEach(rider => {
+                    const row = document.createElement('tr');
+                    row.className = 'border-b hover:bg-gray-50';
+                    row.innerHTML = `
+                        <td class="px-6 py-4 font-bold">${rider.pos}</td>
+                        <td class="px-6 py-4">${rider.rider}</td>
+                        <td class="px-6 py-4">${rider.team}</td>
+                        <td class="px-6 py-4 text-center font-bold">${rider.points}</td>
+                        <td class="px-6 py-4 text-center">${rider.wins}</td>
+                    `;
+                    standingsBody.appendChild(row);
+                });
+            }, 800);
+        }
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', function() {
+            // Set initial filter to Superbike
+            filterStandings('superbike');
+        });
+    </script>
+</body>
+</html><!DOCTYPE html>
+<html lang="en">
